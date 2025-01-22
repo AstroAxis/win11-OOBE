@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>404</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'FangYuan';
+            src: url('./TTF/FangYuanTi.ttf') format('truetype');
+        }
+
+        * {
+            font-family: 'FangYuan', sans-serif !important;
+            font-weight: bold !important;
+        }
+
+        body {
+            background-color: #0078d7;
+            color: white;
+            margin: 0;
+            padding: 120px 50px;
+            overflow: hidden;
+        }
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            z-index: 1000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .progress-bar-long {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background-color: white;
+            animation: progress-long 6s infinite linear;
+            border-radius: 3px;
+        }
+
+        .progress-bar-short {
+            position: absolute;
+            width: 30%;
+            height: 100%;
+            background-color: white;
+            animation: progress-short 6s infinite linear;
+            border-radius: 3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .sad-face {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            font-size: 36px;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .text {
+            font-size: 24px;
+            line-height: 1.5;
+            margin-bottom: 50px;
+        }
+
+        .qr {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .stop-code {
+            margin-top: 50px;
+            font-size: 18px;
+        }
+
+        .refresh-count {
+            font-size: 24px;
+            line-height: 1.5;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 60px 20px;
+            }
+
+            .sad-face {
+                font-size: 60px;
+            }
+
+            .header {
+                font-size: 28px;
+            }
+
+            .text {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes progress-long {
+            0% {
+                transform: translateX(-100%);
+                opacity: 1;
+            }
+            45% {
+                transform: translateX(400%);
+                opacity: 1;
+            }
+            46% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(400%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes progress-short {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            46% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            95% {
+                transform: translateX(400%);
+                opacity: 1;
+            }
+            96% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(400%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress">
+        <div class="progress-bar-long"></div>
+        <div class="progress-bar-short"></div>
+    </div>
+    <div class="container">
+        <div class="sad-face">:(</div>
+        <div class="header">网页遇到问题，需要重新打开！</div>
+        <div class="text">
+            我们会每10秒重新刷新此网页，若还无法恢复，我们了解到此消息会尽快修复问题。
+            <div class="refresh-count">已刷新次数：<span id="count">0</span></div>
+        </div>
+        <div class="qr">
+            如需报告此问题，可以发送到邮箱：<br>
+            2350772784@qq.com
+        </div>
+        <div class="stop-code">
+            停止代码：404
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取或初始化刷新次数
+            let refreshCount = parseInt(sessionStorage.getItem('refreshCount')) || 0;
+            refreshCount++;
+            
+            // 更新sessionStorage和显示
+            sessionStorage.setItem('refreshCount', refreshCount.toString());
+            const countElement = document.getElementById('count');
+            if (countElement) {
+                countElement.textContent = refreshCount;
+            }
+    
+            // 10秒后自动刷新
+            setTimeout(() => {
+                window.location.reload();
+            }, 10000);
+    
+            // 禁用右键菜单
+            document.addEventListener('contextmenu', event => event.preventDefault());
+    
+            // 禁用F11
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 122) {
+                    e.preventDefault();
+                }
+            });
+    
+            // Alt+Enter 全屏切换
+            document.addEventListener('keydown', function(e) {
+                if (e.altKey && e.keyCode === 13) {
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+    
+            // 只在浏览器关闭时清除计数，而不是在页面刷新时
+            window.addEventListener('beforeunload', function(e) {
+                // 检查是否是页面刷新
+                if (!e.currentTarget.performance.navigation.type === 1) {
+                    sessionStorage.clear();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
